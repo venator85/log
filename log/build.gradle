@@ -19,3 +19,14 @@ android {
 
 dependencies {
 }
+
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'venator85'
+    groupId = 'eu.alessiobianchi'
+    artifactId = 'log'
+    publishVersion = '0.1'
+    desc = 'A lightweight logger for Android.'
+    website = 'https://github.com/venator85/log'
+}
