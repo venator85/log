@@ -7,7 +7,7 @@ public class Log {
 
 	private static final int MAXIMUM_LINE_LENGTH = 4000;
 
-	private static boolean enabled;
+	private static boolean enabled = true;
 
 	public static void setEnabled(boolean enabled) {
 		Log.enabled = enabled;
@@ -17,44 +17,44 @@ public class Log {
 		return enabled;
 	}
 
-	public static void v(String msg, Throwable t, Object obj) {
-		log(android.util.Log.VERBOSE, getTag(obj), msg, t);
+	public static void v(String msg, Throwable t, Object tag) {
+		log(android.util.Log.VERBOSE, getTag(tag), msg, t);
 	}
 
-	public static void d(String msg, Throwable t, Object obj) {
-		log(android.util.Log.DEBUG, getTag(obj), msg, t);
+	public static void d(String msg, Throwable t, Object tag) {
+		log(android.util.Log.DEBUG, getTag(tag), msg, t);
 	}
 
-	public static void i(String msg, Throwable t, Object obj) {
-		log(android.util.Log.INFO, getTag(obj), msg, t);
+	public static void i(String msg, Throwable t, Object tag) {
+		log(android.util.Log.INFO, getTag(tag), msg, t);
 	}
 
-	public static void w(String msg, Throwable t, Object obj) {
-		log(android.util.Log.WARN, getTag(obj), msg, t);
+	public static void w(String msg, Throwable t, Object tag) {
+		log(android.util.Log.WARN, getTag(tag), msg, t);
 	}
 
-	public static void e(String msg, Throwable t, Object obj) {
-		log(android.util.Log.ERROR, getTag(obj), msg, t);
+	public static void e(String msg, Throwable t, Object tag) {
+		log(android.util.Log.ERROR, getTag(tag), msg, t);
 	}
 
-	public static void v(String msg, Object obj) {
-		v(msg, null, obj);
+	public static void v(String msg, Object tag) {
+		v(msg, null, tag);
 	}
 
-	public static void d(String msg, Object obj) {
-		d(msg, null, obj);
+	public static void d(String msg, Object tag) {
+		d(msg, null, tag);
 	}
 
-	public static void i(String msg, Object obj) {
-		i(msg, null, obj);
+	public static void i(String msg, Object tag) {
+		i(msg, null, tag);
 	}
 
-	public static void w(String msg, Object obj) {
-		w(msg, null, obj);
+	public static void w(String msg, Object tag) {
+		w(msg, null, tag);
 	}
 
-	public static void e(String msg, Object obj) {
-		e(msg, null, obj);
+	public static void e(String msg, Object tag) {
+		e(msg, null, tag);
 	}
 
 	private static void log(int level, String tag, String msg, Throwable t) {
@@ -89,10 +89,10 @@ public class Log {
 		if (tr == null) {
 			return "";
 		}
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		pw.append('\n');
+		StringWriter sw = new StringWriter(256);
+		PrintWriter pw = new PrintWriter(sw, false);
 		tr.printStackTrace(pw);
+		pw.flush();
 		return sw.toString();
 	}
 
