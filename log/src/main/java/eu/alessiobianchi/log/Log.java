@@ -101,12 +101,30 @@ public class Log {
 			String tag;
 			if (obj instanceof String) {
 				tag = (String) obj;
-			} else if (obj instanceof Class) {
-				Class<?> c = (Class<?>) obj;
-				tag = c.getSimpleName();
+				if (tag.isEmpty()) {
+					tag = "(no-tag)";
+				}
 			} else {
-				Class<?> c = obj.getClass();
-				tag = c.getSimpleName();
+				Class<?> c;
+				if (obj instanceof Class) {
+					c = (Class<?>) obj;
+				} else {
+					c = obj.getClass();
+				}
+				if (c.isAnonymousClass()) {
+					String name = c.getName();
+					final int pos = name.lastIndexOf('.');
+					if (pos == -1 || pos == name.length() - 1) {
+						tag = name;
+					} else {
+						tag = name.substring(pos + 1);
+					}
+				} else {
+					tag = c.getSimpleName();
+				}
+				if (tag.isEmpty()) {
+					tag = c.getName();
+				}
 			}
 			return tag;
 		} else {
