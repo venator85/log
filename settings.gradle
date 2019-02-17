@@ -1,1 +1,2 @@
 include ':log'
+include ':log-noop'

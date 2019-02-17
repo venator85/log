@@ -24,7 +24,7 @@ apply plugin: 'com.novoda.bintray-release'
 publish {
     userOrg = 'venator85'
     groupId = 'eu.alessiobianchi'
-    artifactId = 'log'
+    artifactId = 'log-noop'
     publishVersion = rootProject.ext.libraryVersion
     desc = 'A lightweight logger for Android.'
     website = 'https://github.com/venator85/log'
