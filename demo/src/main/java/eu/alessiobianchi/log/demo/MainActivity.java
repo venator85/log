@@ -11,8 +11,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.e("Ciao", this);
-		Log.e("Ciao", new Exception("s"), this);
+		Log.e("Ciao", "msg");
+		Log.e("Ciao", new Exception(), "msg");
 
+		TestKt.test();
 	}
 }
