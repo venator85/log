@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
 	compileSdkVersion 26
@@ -7,25 +10,62 @@ android {
 		minSdkVersion 14
 		targetSdkVersion 26
 		versionCode 1
-		versionName "1.0"
+		versionName rootProject.ext.libraryVersion
 	}
 	buildTypes {
 		release {
 			minifyEnabled false
 		}
 	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 }
 
 dependencies {
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-apply plugin: 'com.novoda.bintray-release'
+group "eu.alessiobianchi"
+def artifact_id = "log"
+version android.defaultConfig.versionName
 
-publish {
-    userOrg = 'venator85'
-    groupId = 'eu.alessiobianchi'
-    artifactId = 'log'
-    publishVersion = rootProject.ext.libraryVersion
-    desc = 'A lightweight logger for Android.'
-    website = 'https://github.com/venator85/log'
+task androidSourcesJar(type: Jar) {
+	archiveClassifier.set('sources')
+	from android.sourceSets.main.java.srcDirs
+}
+
+afterEvaluate {
+	publishing {
+		publications {
+			release(MavenPublication) {
+				from components.release
+				artifact androidSourcesJar
+
+				artifactId = artifact_id
+			}
+		}
+	}
+}
+
+// gradle -Papikey=ASDFASDFASDF bintrayUpload
+bintray {
+	def bintrayUser = "venator85"
+	def bintrayApiKey = project.findProperty('apikey') ?: System.getenv('BINTRAY_API_KEY')
+	user = bintrayUser
+	key = bintrayApiKey
+	publications = ['release']
+	pkg {
+		repo = 'maven'
+		name = artifact_id
+		userOrg = bintrayUser
+		publish = true
+	}
+	override = true
+	dryRun = false
 }
