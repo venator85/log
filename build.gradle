@@ -10,7 +10,7 @@ buildscript {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 	}
 	ext {
-		libraryVersion = "0.5.1"
+		libraryVersion = "0.5.2"
 	}
 }
 

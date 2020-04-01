@@ -127,17 +127,19 @@ object Log {
 	private fun logcat(level: Int, tag: String, msg: String) {
 		val msgLen = msg.length
 		if (msgLen > MAXIMUM_LINE_LENGTH) {
-			var i = 0
-			while (i < msgLen) {
-				var newline = msg.indexOf('\n', i)
-				newline = if (newline != -1) newline else msgLen
-				do {
-					val end = min(newline, i + MAXIMUM_LINE_LENGTH)
-					val part = msg.substring(i, end)
-					android.util.Log.println(level, tag, part)
-					i = end
-				} while (i < newline)
-				i++
+			lock.withLock {
+				var i = 0
+				while (i < msgLen) {
+					var newline = msg.indexOf('\n', i)
+					newline = if (newline != -1) newline else msgLen
+					do {
+						val end = min(newline, i + MAXIMUM_LINE_LENGTH)
+						val part = msg.substring(i, end)
+						android.util.Log.println(level, tag, part)
+						i = end
+					} while (i < newline)
+					i++
+				}
 			}
 		} else {
 			android.util.Log.println(level, tag, msg)

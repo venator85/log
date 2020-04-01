@@ -5,36 +5,65 @@ package eu.alessiobianchi.log
 import java.io.File
 import java.util.concurrent.locks.ReentrantLock
 
-val lock = ReentrantLock()
+object Log {
+	@JvmStatic
+	val lock = ReentrantLock()
 
-var enabled = true
-	@JvmName("isEnabled") get
+	@JvmStatic
+	var enabled = true
+		@JvmName("isEnabled") get
 
-var logFile: File? = null
-	private set
+	@JvmStatic
+	var logFile: File? = null
+		private set
 
-fun init(enableLogcat: Boolean, logFile: File?) {
-}
+	@JvmStatic
+	fun init(enableLogcat: Boolean, logFile: File?) {
+	}
 
-inline fun withLock(crossinline block: () -> Unit) {
-}
+	@JvmStatic
+	inline fun withLock(crossinline block: () -> Unit) {
+	}
 
-@JvmOverloads
-fun v(msg: String, t: Throwable? = null, tag: Any?) {
-}
+	@JvmStatic
+	fun v(msg: String?, t: Throwable?, tag: Any?) {
+	}
 
-@JvmOverloads
-fun d(msg: String, t: Throwable? = null, tag: Any?) {
-}
+	@JvmStatic
+	fun d(msg: String?, t: Throwable?, tag: Any?) {
+	}
 
-@JvmOverloads
-fun i(msg: String, t: Throwable? = null, tag: Any?) {
-}
+	@JvmStatic
+	fun i(msg: String?, t: Throwable?, tag: Any?) {
+	}
 
-@JvmOverloads
-fun w(msg: String, t: Throwable? = null, tag: Any?) {
-}
+	@JvmStatic
+	fun w(msg: String?, t: Throwable?, tag: Any?) {
+	}
 
-@JvmOverloads
-fun e(msg: String, t: Throwable? = null, tag: Any?) {
+	@JvmStatic
+	fun e(msg: String?, t: Throwable?, tag: Any?) {
+	}
+
+
+	@JvmStatic
+	fun v(msg: String?, tag: Any?) {
+	}
+
+	@JvmStatic
+	fun d(msg: String?, tag: Any?) {
+	}
+
+	@JvmStatic
+	fun i(msg: String?, tag: Any?) {
+	}
+
+	@JvmStatic
+	fun w(msg: String?, tag: Any?) {
+	}
+
+	@JvmStatic
+	fun e(msg: String?, tag: Any?) {
+	}
+
 }

@@ -7,4 +7,7 @@ fun test() {
 	Log.e("Ciao", "msg")
 	Log.e("Ciao", Exception(), "msg")
 
+	Log.withLock {
+	}
+
 }
