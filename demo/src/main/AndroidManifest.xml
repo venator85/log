@@ -6,7 +6,17 @@
 	<application
 		android:allowBackup="false"
 		android:icon="@mipmap/ic_launcher"
+		android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
 		tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
+
+		<activity
+			android:name=".KotlinActivity"
+			android:screenOrientation="sensorPortrait">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
 		<activity
 			android:name=".MainActivity"

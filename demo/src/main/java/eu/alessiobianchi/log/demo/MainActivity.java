@@ -1,11 +1,12 @@
 package eu.alessiobianchi.log.demo;
 
-import android.app.Activity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import eu.alessiobianchi.log.Log;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +15,8 @@ public class MainActivity extends Activity {
 		Log.e("Ciao", "msg");
 		Log.e("Ciao", new Exception(), "msg");
 
-		TestKt.test();
+		Log.e("Ciao");
+		Log.e("Ciao", new Exception());
+
 	}
 }
