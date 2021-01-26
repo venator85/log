@@ -26,44 +26,55 @@ object Log {
 	}
 
 	@JvmStatic
-	fun v(msg: String?, t: Throwable?, tag: Any?) {
+	@JvmOverloads
+	fun v(msg: String?, t: Throwable?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun d(msg: String?, t: Throwable?, tag: Any?) {
+	@JvmOverloads
+	fun d(msg: String?, t: Throwable?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun i(msg: String?, t: Throwable?, tag: Any?) {
+	@JvmOverloads
+	fun i(msg: String?, t: Throwable?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun w(msg: String?, t: Throwable?, tag: Any?) {
+	@JvmOverloads
+	fun w(msg: String?, t: Throwable?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun e(msg: String?, t: Throwable?, tag: Any?) {
+	@JvmOverloads
+	fun e(msg: String?, t: Throwable?, tag: Any? = null) {
 	}
 
 
 	@JvmStatic
-	fun v(msg: String?, tag: Any?) {
+	@JvmOverloads
+	fun v(msg: String?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun d(msg: String?, tag: Any?) {
+	@JvmOverloads
+	fun d(msg: String?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun i(msg: String?, tag: Any?) {
+	@JvmOverloads
+	fun i(msg: String?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun w(msg: String?, tag: Any?) {
+	@JvmOverloads
+	fun w(msg: String?, tag: Any? = null) {
 	}
 
 	@JvmStatic
-	fun e(msg: String?, tag: Any?) {
+	@JvmOverloads
+	fun e(msg: String?, tag: Any? = null) {
 	}
 
+	fun getTag(obj: Any?): String = ""
 }
