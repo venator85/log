@@ -12,11 +12,11 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.e("Ciao", "msg");
-		Log.e("Ciao", new Exception(), "msg");
+		Log.v("Ciao", "msg");
+		Log.v("Ciao", new Exception(), "msg");
 
-		Log.e("Ciao");
-		Log.e("Ciao", new Exception());
+		Log.v("Ciao");
+		Log.v("Ciao", new Exception());
 
 	}
 }

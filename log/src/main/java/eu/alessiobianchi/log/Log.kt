@@ -3,7 +3,10 @@
 package eu.alessiobianchi.log
 
 import android.os.Build
-import java.io.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
@@ -18,6 +21,14 @@ object Log {
 	@JvmStatic
 	private val TIMESTAMP_FORMAT by lazy(LazyThreadSafetyMode.NONE) {
 		SimpleDateFormat("HH:mm:ss.SSS", Locale.US)
+	}
+
+	private val MIN_LEVEL = run {
+		when (Build.MANUFACTURER.toLowerCase(Locale.US)) {
+			"sony" -> android.util.Log.INFO
+			"zte" -> android.util.Log.DEBUG
+			else -> 0
+		}
 	}
 
 	@JvmStatic
@@ -37,7 +48,7 @@ object Log {
 						writer!!.flush()
 					} catch (e: IOException) {
 						logcat(android.util.Log.ERROR, "Log", "Error flushing log file")
-						logcat(android.util.Log.ERROR, "Log", getStackTraceString(e))
+						logcat(android.util.Log.ERROR, "Log", e.stackTraceToString())
 					}
 				}
 				return logFile
@@ -120,7 +131,7 @@ object Log {
 	@JvmStatic
 	private fun log(level: Int, tag: String, message: String?, t: Throwable?) {
 		val msg = message ?: "null"
-		val stacktrace = if (t != null) getStackTraceString(t) else null
+		val stacktrace = t?.stackTraceToString()
 		if (stacktrace == null) {
 			// fast path without single locking
 			logcat(level, tag, msg)
@@ -141,6 +152,7 @@ object Log {
 	@JvmStatic
 	private fun logcat(level: Int, tag: String, msg: String) {
 		val msgLen = msg.length
+		val adjLevel = level.coerceAtLeast(MIN_LEVEL)
 		if (msgLen > MAXIMUM_LINE_LENGTH) {
 			lock.withLock {
 				var i = 0
@@ -150,14 +162,14 @@ object Log {
 					do {
 						val end = min(newline, i + MAXIMUM_LINE_LENGTH)
 						val part = msg.substring(i, end)
-						android.util.Log.println(level, tag, part)
+						android.util.Log.println(adjLevel, tag, part)
 						i = end
 					} while (i < newline)
 					i++
 				}
 			}
 		} else {
-			android.util.Log.println(level, tag, msg)
+			android.util.Log.println(adjLevel, tag, msg)
 		}
 	}
 
@@ -175,20 +187,8 @@ object Log {
 			writer!!.write(String.format(Locale.US, MSG_FORMAT, TIMESTAMP_FORMAT.format(Date()), sLevel, tag, msg))
 		} catch (e: IOException) {
 			logcat(android.util.Log.ERROR, "Log", "Error writing log to file")
-			logcat(android.util.Log.ERROR, "Log", getStackTraceString(e))
+			logcat(android.util.Log.ERROR, "Log", e.stackTraceToString())
 		}
-	}
-
-	@JvmStatic
-	private fun getStackTraceString(tr: Throwable?): String {
-		if (tr == null) {
-			return ""
-		}
-		val sw = StringWriter(256)
-		val pw = PrintWriter(sw, false)
-		tr.printStackTrace(pw)
-		pw.flush()
-		return sw.toString()
 	}
 
 	@JvmStatic
@@ -217,13 +217,13 @@ object Log {
 
 	private fun createTag(): String {
 		return Throwable().stackTrace
-				.first { it.className !in fqcnIgnore }
-				.className
-				.substringAfterLast('.')
-				.substringBefore('$')
+			.first { it.className !in fqcnIgnore }
+			.className
+			.substringAfterLast('.')
+			.substringBefore('$')
 	}
 
 	private val fqcnIgnore = listOf(
-			Log::class.java.name,
+		Log::class.java.name,
 	)
 }

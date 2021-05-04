@@ -76,5 +76,6 @@ object Log {
 	fun e(msg: String?, tag: Any? = null) {
 	}
 
+	@JvmStatic
 	fun getTag(obj: Any?): String = ""
 }

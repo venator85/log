@@ -1,6 +1,7 @@
 plugins {
 	id("com.android.library")
 	kotlin("android")
+	id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.5.0"
 }
 
 android {
@@ -9,10 +10,6 @@ android {
 	defaultConfig {
 		minSdkVersion(14)
 		targetSdkVersion(30)
-		versionCode(1)
-
-		val VERSION_NAME: String by project
-		versionName(VERSION_NAME)
 	}
 	buildTypes {
 		getByName("release") {
