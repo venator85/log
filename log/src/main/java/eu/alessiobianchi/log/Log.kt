@@ -195,7 +195,7 @@ object Log {
 	}
 
 	private fun createTag(): String {
-		return Thread.currentThread().stackTrace
+		return Throwable().stackTrace
 			.first { it.className !in fqcnIgnore }
 			.className
 			.substringAfterLast('.')
