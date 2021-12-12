@@ -1,4 +1,5 @@
 @file:JvmName("Log")
+@file:Suppress("unused")
 
 package eu.alessiobianchi.log
 
@@ -11,10 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
-import kotlin.math.min
 
 object Log {
-	private const val MAXIMUM_LINE_LENGTH = 4000
 	private const val MAX_TAG_LENGTH = 23
 	private const val MSG_FORMAT = "%s [%s][%s]:   %s\n"
 
@@ -23,20 +22,15 @@ object Log {
 		SimpleDateFormat("HH:mm:ss.SSS", Locale.US)
 	}
 
-	private val MIN_LEVEL = run {
-		when (Build.MANUFACTURER.toLowerCase(Locale.US)) {
-			"sony" -> android.util.Log.INFO
-			"zte" -> android.util.Log.DEBUG
-			else -> 0
-		}
-	}
-
 	@JvmStatic
 	val lock = ReentrantLock()
 
 	@JvmStatic
 	var enabled = true
 		@JvmName("isEnabled") get
+
+	@JvmStatic
+	var impl: ILogger = AndroidLogcat()
 
 	@JvmStatic
 	var logFile: File? = null
@@ -151,44 +145,29 @@ object Log {
 
 	@JvmStatic
 	private fun logcat(level: Int, tag: String, msg: String) {
-		val msgLen = msg.length
-		val adjLevel = level.coerceAtLeast(MIN_LEVEL)
-		if (msgLen > MAXIMUM_LINE_LENGTH) {
-			lock.withLock {
-				var i = 0
-				while (i < msgLen) {
-					var newline = msg.indexOf('\n', i)
-					newline = if (newline != -1) newline else msgLen
-					do {
-						val end = min(newline, i + MAXIMUM_LINE_LENGTH)
-						val part = msg.substring(i, end)
-						android.util.Log.println(adjLevel, tag, part)
-						i = end
-					} while (i < newline)
-					i++
-				}
-			}
-		} else {
-			android.util.Log.println(adjLevel, tag, msg)
-		}
+		impl.doLog(lock, level, msg, tag)
 	}
 
 	@JvmStatic
 	private fun logToFile(level: Int, tag: String, msg: String) {
 		try {
-			val sLevel: String = when (level) {
-				android.util.Log.VERBOSE -> "V"
-				android.util.Log.DEBUG -> "D"
-				android.util.Log.INFO -> "I"
-				android.util.Log.WARN -> "W"
-				android.util.Log.ERROR -> "E"
-				else -> level.toString()
-			}
+			val sLevel = logLevelToString(level)
 			writer!!.write(String.format(Locale.US, MSG_FORMAT, TIMESTAMP_FORMAT.format(Date()), sLevel, tag, msg))
 		} catch (e: IOException) {
 			logcat(android.util.Log.ERROR, "Log", "Error writing log to file")
 			logcat(android.util.Log.ERROR, "Log", e.stackTraceToString())
 		}
+	}
+
+	@JvmStatic
+	fun logLevelToString(level: Int) = when (level) {
+		android.util.Log.VERBOSE -> "V"
+		android.util.Log.DEBUG -> "D"
+		android.util.Log.INFO -> "I"
+		android.util.Log.WARN -> "W"
+		android.util.Log.ERROR -> "E"
+		android.util.Log.ASSERT -> "A"
+		else -> level.toString()
 	}
 
 	@JvmStatic
@@ -216,7 +195,7 @@ object Log {
 	}
 
 	private fun createTag(): String {
-		return Throwable().stackTrace
+		return Thread.currentThread().stackTrace
 			.first { it.className !in fqcnIgnore }
 			.className
 			.substringAfterLast('.')

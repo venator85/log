@@ -1,3 +1,23 @@
+public class eu/alessiobianchi/log/AndroidLogcat : eu/alessiobianchi/log/ILogger {
+	public static final field Companion Leu/alessiobianchi/log/AndroidLogcat$Companion;
+	protected static final field MAXIMUM_LINE_LENGTH I
+	public fun <init> ()V
+	public fun doLog (Ljava/util/concurrent/locks/ReentrantLock;ILjava/lang/String;Ljava/lang/String;)V
+	protected fun findMinLevel ()I
+}
+
+public final class eu/alessiobianchi/log/AndroidLogcat$Companion {
+}
+
+public class eu/alessiobianchi/log/ConsoleLogger : eu/alessiobianchi/log/ILogger {
+	public fun <init> ()V
+	public fun doLog (Ljava/util/concurrent/locks/ReentrantLock;ILjava/lang/String;Ljava/lang/String;)V
+}
+
+public abstract interface class eu/alessiobianchi/log/ILogger {
+	public abstract fun doLog (Ljava/util/concurrent/locks/ReentrantLock;ILjava/lang/String;Ljava/lang/String;)V
+}
+
 public final class eu/alessiobianchi/log/Log {
 	public static final field INSTANCE Leu/alessiobianchi/log/Log;
 	public static final fun d (Ljava/lang/String;)V
@@ -12,6 +32,7 @@ public final class eu/alessiobianchi/log/Log {
 	public static final fun e (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Object;)V
 	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)V
 	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Object;ILjava/lang/Object;)V
+	public static final fun getImpl ()Leu/alessiobianchi/log/ILogger;
 	public static final fun getLock ()Ljava/util/concurrent/locks/ReentrantLock;
 	public static final fun getLogFile ()Ljava/io/File;
 	public static final fun getTag (Ljava/lang/Object;)Ljava/lang/String;
@@ -23,7 +44,9 @@ public final class eu/alessiobianchi/log/Log {
 	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Object;ILjava/lang/Object;)V
 	public static final fun init (ZLjava/io/File;)V
 	public static final fun isEnabled ()Z
+	public static final fun logLevelToString (I)Ljava/lang/String;
 	public static final fun setEnabled (Z)V
+	public static final fun setImpl (Leu/alessiobianchi/log/ILogger;)V
 	public static final fun v (Ljava/lang/String;)V
 	public static final fun v (Ljava/lang/String;Ljava/lang/Object;)V
 	public static final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
@@ -37,5 +60,10 @@ public final class eu/alessiobianchi/log/Log {
 	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)V
 	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Object;ILjava/lang/Object;)V
 	public static final fun withLock (Lkotlin/jvm/functions/Function0;)V
+}
+
+public class eu/alessiobianchi/log/NoOpLogger : eu/alessiobianchi/log/ILogger {
+	public fun <init> ()V
+	public fun doLog (Ljava/util/concurrent/locks/ReentrantLock;ILjava/lang/String;Ljava/lang/String;)V
 }
 

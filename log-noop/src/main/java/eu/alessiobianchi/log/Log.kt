@@ -1,4 +1,5 @@
 @file:JvmName("Log")
+@file:Suppress("unused")
 
 package eu.alessiobianchi.log
 
@@ -12,6 +13,9 @@ object Log {
 	@JvmStatic
 	var enabled = true
 		@JvmName("isEnabled") get
+
+	@JvmStatic
+	var impl: ILogger = NoOpLogger()
 
 	@JvmStatic
 	var logFile: File? = null
@@ -75,6 +79,9 @@ object Log {
 	@JvmOverloads
 	fun e(msg: String?, tag: Any? = null) {
 	}
+
+	@JvmStatic
+	fun logLevelToString(level: Int) = ""
 
 	@JvmStatic
 	fun getTag(obj: Any?): String = ""
